@@ -44,7 +44,7 @@ CREATE TABLE `venue` (
   `description` LONGTEXT,
   `cost` INT(10) NOT NULL,
   `price` INT(10) NOT NULL,
-  `address_id` INT(20) NOT NULL
+  `address_id` INT(20)
 );
 
 CREATE TABLE `address` (
@@ -63,9 +63,9 @@ CREATE TABLE `location` (
 CREATE TABLE `projects` (
   `project_id` INT(20) PRIMARY KEY AUTO_INCREMENT,
   `name` TINYTEXT NOT NULL,
-  `user_id` INT(20) NOT NULL,
-  `package_id` INT(20) NOT NULL,
-  `created_at` TIMESTAMP DEFAULT NOW();
+  `user_id` INT(20),
+  `package_id` INT(20),
+  `created_at` TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE `position` (
@@ -83,11 +83,11 @@ CREATE TABLE `rank` (
 CREATE TABLE `status` (
   `status_id` INT(20) PRIMARY KEY AUTO_INCREMENT,
   `position_id` INT(20) NOT NULL,
-  `rank_id` INT(20) NOT NULL
+  `rank_id` INT(20)
 );
 
 CREATE TABLE `admin` (
-  `admin_id` INT(20) NOT NULL
+  `admin_id` INT(20)
 );
 
 CREATE TABLE `messege` (
@@ -105,5 +105,84 @@ CREATE TABLE `transaction` (
   `project_id` INT(20),
   `total_cost` INT(20) NOT NULL,
   `total_price` INT(20) NOT NULL,
-  `created_at` TIMESTAMP DEFAULT NOW();
+  `created_at` TIMESTAMP DEFAULT NOW()
 );
+
+ALTER TABLE `messege`
+ADD FOREIGN KEY (`from`)
+REFERENCES `person`(`person_id`)
+ON DELETE SET NULL;
+
+ALTER TABLE `messege`
+ADD FOREIGN KEY (`to`)
+REFERENCES `person`(`person_id`)
+ON DELETE SET NULL;
+
+ALTER TABLE `status`
+ADD FOREIGN KEY (`position_id`)
+REFERENCES `position`(`position_id`)
+ON DELETE CASCADE,
+ADD FOREIGN KEY (`rank_id`)
+REFERENCES `rank`(`rank_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `admin`
+ADD FOREIGN KEY (`admin_id`)
+REFERENCES `person`(`person_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `person`
+ADD FOREIGN KEY (`status_id`)
+REFERENCES `status`(`status_id`)
+ON DELETE SET NULL;
+
+ALTER TABLE `venue`
+ADD FOREIGN KEY(`address_id`)
+REFERENCES `address`(`address_id`)
+ON DELETE SET NULL;
+
+ALTER TABLE `services`
+ADD FOREIGN KEY (`package_id`)
+REFERENCES `package`(`package_id`)
+ON DELETE CASCADE,
+ADD FOREIGN KEY (`item_id`)
+REFERENCES `items`(`item_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `works`
+ADD FOREIGN KEY (`package_id`)
+REFERENCES `package`(`package_id`)
+ON DELETE CASCADE,
+ADD FOREIGN KEY (`stuff_id`)
+REFERENCES `person`(`person_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `package`
+ADD FOREIGN KEY (`venue_id`)
+REFERENCES `venue`(`venue_id`)
+ON DELETE SET NULL;
+
+
+ALTER TABLE `address`
+ADD FOREIGN KEY (`division_id`)
+REFERENCES `location`(`id`)
+ON DELETE SET NULL,
+ADD FOREIGN KEY (`district_id`)
+REFERENCES `location`(`id`)
+ON DELETE SET NULL,
+ADD FOREIGN KEY (`area_id`)
+REFERENCES `location`(`id`)
+ON DELETE SET NULL;
+
+ALTER TABLE `transaction`
+ADD FOREIGN KEY (`project_id`)
+REFERENCES `projects`(project_id)
+ON DELETE SET NULL;
+
+ALTER TABLE `projects`
+ADD FOREIGN KEY (`user_id`)
+REFERENCES `person`(`person_id`)
+ON DELETE SET NULL,
+ADD FOREIGN KEY (`package_id`)
+REFERENCES `package`(`package_id`)
+ON DELETE SET NULL;
