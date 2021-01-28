@@ -50,8 +50,7 @@ CREATE TABLE `venue` (
 CREATE TABLE `address` (
   `address_id` INT(20) PRIMARY KEY AUTO_INCREMENT,
   `division_id` INT(20),
-  `district_id` INT(20),
-  `area_id` INT(20)
+  `district_id` INT(20)
 );
 
 CREATE TABLE `location` (
@@ -77,7 +76,7 @@ CREATE TABLE `position` (
 CREATE TABLE `rank` (
   `rank_id` INT(20) PRIMARY KEY AUTO_INCREMENT,
   `name` TINYTEXT NOT NULL,
-  `bonus` DECIMAL(2,1) NOT NULL
+  `bonus` DECIMAL(3,2) NOT NULL
 );
 
 CREATE TABLE `status` (
@@ -134,6 +133,9 @@ ON DELETE CASCADE;
 ALTER TABLE `person`
 ADD FOREIGN KEY (`status_id`)
 REFERENCES `status`(`status_id`)
+ON DELETE SET NULL,
+ADD FOREIGN KEY (`address_id`)
+REFERENCES `address`(`address_id`)
 ON DELETE SET NULL;
 
 ALTER TABLE `venue`
@@ -168,9 +170,6 @@ ADD FOREIGN KEY (`division_id`)
 REFERENCES `location`(`id`)
 ON DELETE SET NULL,
 ADD FOREIGN KEY (`district_id`)
-REFERENCES `location`(`id`)
-ON DELETE SET NULL,
-ADD FOREIGN KEY (`area_id`)
 REFERENCES `location`(`id`)
 ON DELETE SET NULL;
 
